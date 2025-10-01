@@ -1,9 +1,9 @@
 #include "main.hpp"
-#include "tintin_reporter.hpp"
-#include "server.hpp"
-#include "daemonize.hpp"
-#include "config.hpp"
-#include "signals.hpp"
+#include "include/tintin_reporter.hpp"
+#include "include/server.hpp"
+#include "include/daemonize.hpp"
+#include "include/config.hpp"
+#include "include/signals.hpp"
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -12,9 +12,11 @@
 #include <cstring>
 #include <iostream>
 
-int main() {
+int main()
+{
     // Must be run as root
-    if (geteuid() != 0) {
+    if (geteuid() != 0)
+    {
         std::cerr << "Must be run as root" << std::endl;
         return 1;
     }
@@ -24,7 +26,8 @@ int main() {
 
     // Single instance via lock file
     int lockfd = ::open(md::kLockFile, O_CREAT | O_EXCL | O_WRONLY, 0644);
-    if (lockfd < 0) {
+    if (lockfd < 0)
+    {
         // Print the exact error as in subject example
         std::cerr << "Can't open :/var/lock/matt_daemon.lock" << std::endl;
         return 1;
@@ -44,11 +47,14 @@ int main() {
     register_signal_handlers();
 
     // Run server
-    try {
+    try
+    {
         Server s;
         // Poll signal flag and request stop -> ensures all clients are closed
-        while (true) {
-            if (g_signal_received) {
+        while (true)
+        {
+            if (g_signal_received)
+            {
                 Tintin_reporter::instance().info("Signal handler.");
                 s.requestStop();
                 break;
@@ -56,12 +62,15 @@ int main() {
             s.run();
             break; // run() returns on stop
         }
-    } catch (...) {
+    }
+    catch (...)
+    {
         Tintin_reporter::instance().error("Fatal error in server loop.");
     }
 
     // Cleanup
-    if (g_signal_received) {
+    if (g_signal_received)
+    {
         Tintin_reporter::instance().info("Exiting due to received signal.");
     }
     ::unlink(md::kLockFile);

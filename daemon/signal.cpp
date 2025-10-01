@@ -1,4 +1,4 @@
-#include "signals.hpp"
+#include "include/signals.hpp"
 
 #include <csignal>
 #include <cstdio>
@@ -6,16 +6,19 @@
 
 volatile sig_atomic_t g_signal_received = 0;
 
-void cleanup() {
+void cleanup()
+{
     // Flush all libc buffers
     fflush(nullptr);
 }
 
-static void shutdown_handler(int /*signum*/) {
+static void shutdown_handler(int /*signum*/)
+{
     g_signal_received = 1;
 }
 
-void register_signal_handlers(void) {
+void register_signal_handlers(void)
+{
     struct sigaction sa{};
     sa.sa_handler = shutdown_handler;
     sigemptyset(&sa.sa_mask);
