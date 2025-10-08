@@ -10,7 +10,7 @@
 // - Sends a welcome line on connect
 // - A line "quit" from any client triggers graceful shutdown
 class Server {
-public:
+   public:
     Server();
     ~Server();
 
@@ -20,11 +20,11 @@ public:
     // Trigger a shutdown from outside (e.g., signal handler).
     void requestStop();
 
-private:
-    int _serverFd{-1};
-    int _selfPipe[2]{-1, -1};
-    std::atomic<bool> _stop{false};
-    std::vector<int> _clients;
+   private:
+    int               _serverFd {-1};
+    int               _selfPipe[2] {-1, -1};
+    std::atomic<bool> _stop {false};
+    std::vector<int>  _clients;
 
     void setup();
     void loop();
@@ -33,4 +33,4 @@ private:
     void closeAll();
 };
 
-#endif // SERVER_HPP
+#endif  // SERVER_HPP

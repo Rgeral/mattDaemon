@@ -10,7 +10,7 @@ SRC_SERVER		=	$(shell find ./$(NAME_SERVER) -type f -name "*.cpp" | cut -c 10-)
 HDR_SERVER		= 	$(shell find ./$(NAME_SERVER) -type f -name "*.hpp" | cut -c 3-)
 
 CXX				=	g++
-FLAGS			=	-std=c++20 -Wall -Werror -Wextra  -O2
+FLAGS			=	-std=c++20 -Wall -Werror -Wextra -O2 -Idaemon/include
 
 NAME 			= 	MattDaemon
 NAME_SERVER		=	daemon
@@ -35,7 +35,7 @@ print_header:
 	@echo "$(RST)"
 
 ./obj_$(NAME_SERVER)/%.o: ./$(NAME_SERVER)/%.cpp $(HDR_SERVER)
-	mkdir -p $(OBJ_SERVER_REP) $(OBJ_SERVER_REP)/cmds
+	mkdir -p $(OBJ_SERVER_REP) $(OBJ_SERVER_REP)/log
 	$(CXX) $(FLAGS) -c $< -o $@
 	echo "$(BBLU)[$(NAME) OBJ] :$(RST) $@ $(BGREEN)\033[56G[✔]$(RST)"
 
