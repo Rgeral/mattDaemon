@@ -5,4 +5,4 @@
 // standard double-fork + setsid pattern.
 void daemonize();
 
-#endif // DAEMONIZE_HPP
+#endif  // DAEMONIZE_HPP

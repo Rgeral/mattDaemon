@@ -9,7 +9,7 @@
 // Minimal reusable logger writing to a file with the format:
 // [DD/MM/YYYY-HH:MM:SS] [ LEVEL ] - Matt_daemon: message
 class Tintin_reporter {
-public:
+   public:
     enum class Level { INFO, LOG, ERROR };
 
     static Tintin_reporter& instance();
@@ -20,18 +20,18 @@ public:
     inline void user(const std::string& message) { log(Level::LOG, message); }
     inline void error(const std::string& message) { log(Level::ERROR, message); }
 
-private:
+   private:
     Tintin_reporter();
     ~Tintin_reporter();
-    Tintin_reporter(const Tintin_reporter&) = delete;
+    Tintin_reporter(const Tintin_reporter&)            = delete;
     Tintin_reporter& operator=(const Tintin_reporter&) = delete;
 
     std::string timestamp() const;
-    void ensureLogReady();
+    void        ensureLogReady();
 
-    int  _fd{-1};
-    bool _ready{false};
+    int        _fd {-1};
+    bool       _ready {false};
     std::mutex _mtx;
 };
 
-#endif // TINTIN_REPORTER_HPP
+#endif  // TINTIN_REPORTER_HPP

@@ -1,9 +1,4 @@
 #include "main.hpp"
-#include "tintin_reporter.hpp"
-#include "server.hpp"
-#include "daemonize.hpp"
-#include "config.hpp"
-#include "signals.hpp"
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -12,24 +7,39 @@
 #include <cstring>
 #include <iostream>
 
-int main() {
-    // Must be run as root
+#include "include/config.hpp"
+#include "include/daemonize.hpp"
+#include "include/server.hpp"
+#include "include/signals.hpp"
+#include "include/tintin_reporter.hpp"
+
+bool log_directory_exist(const char* path) {
+    if (mkdir(path, 0755) != 0 && errno != EEXIST) {
+        std::cerr << "Failed to create log directory '" << path << "': " << std::strerror(errno)
+                  << std::endl;
+        return false;
+    }
+    return true;
+}
+
+int main(void) {
+    // root check
     if (geteuid() != 0) {
         std::cerr << "Must be run as root" << std::endl;
         return 1;
     }
 
-    // Ensure log directory exists
-    ::mkdir(md::kLogDir, 0755);
+    // log directory check
+    if (!log_directory_exist(md::kLogDir)) return 1;
 
-    // Single instance via lock file
-    int lockfd = ::open(md::kLockFile, O_CREAT | O_EXCL | O_WRONLY, 0644);
+    // single instance check
+    int lockfd = open(md::kLockFile, O_CREAT | O_EXCL | O_WRONLY, 0644);
     if (lockfd < 0) {
-        // Print the exact error as in subject example
-        std::cerr << "Can't open :/var/lock/matt_daemon.lock" << std::endl;
+        std::cerr << "Another instance may be running (lock file exists): " << md::kLockFile
+                  << std::endl;
         return 1;
     }
-    ::close(lockfd);
+    close(lockfd);
 
     // Init logging
     Tintin_reporter::instance().info("Started.");
@@ -38,7 +48,8 @@ int main() {
     // Daemonize now
     Tintin_reporter::instance().info("Entering Daemon mode.");
     daemonize();
-    Tintin_reporter::instance().info(std::string("started. PID: ") + std::to_string(getpid()) + ".");
+    Tintin_reporter::instance().info(std::string("started. PID: ") + std::to_string(getpid()) +
+                                     ".");
 
     // Signals
     register_signal_handlers();
@@ -54,7 +65,7 @@ int main() {
                 break;
             }
             s.run();
-            break; // run() returns on stop
+            break;  // run() returns on stop
         }
     } catch (...) {
         Tintin_reporter::instance().error("Fatal error in server loop.");
@@ -64,6 +75,6 @@ int main() {
     if (g_signal_received) {
         Tintin_reporter::instance().info("Exiting due to received signal.");
     }
-    ::unlink(md::kLockFile);
+    unlink(md::kLockFile);
     return 0;
 }

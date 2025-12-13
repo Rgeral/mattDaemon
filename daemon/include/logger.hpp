@@ -28,35 +28,35 @@ class Logger {
     inline static bool silent = false;
 
     template <typename T>
-    static void log(const T& message) {
+    static void log(const T &message) {
         if (silent) return;
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << getTimestamp() << " " << message << std::endl;
     }
 
     template <typename T>
-    static void debug(const T& message) {
+    static void debug(const T &message) {
         if (silent) return;
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << getTimestamp() << " [DEBUG] " << message << std::endl;
     }
 
     template <typename T>
-    static void info(const T& message) {
+    static void info(const T &message) {
         if (silent) return;
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << getTimestamp() << " [INFO] " << message << std::endl;
     }
 
     template <typename T>
-    static void error(const T& message) {
+    static void error(const T &message) {
         if (silent) return;
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cerr << getTimestamp() << " [ERROR] " << message << std::endl;
     }
 
     template <typename T>
-    static void warn(const T& message) {
+    static void warn(const T &message) {
         if (silent) return;
         std::lock_guard<std::mutex> lock(cout_mutex);
         std::cout << getTimestamp() << " [WARN] " << message << std::endl;

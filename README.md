@@ -14,7 +14,7 @@ Build
 
 Usage
 - Build: make
-- Run: sudo ./Matt_daemon
+- Run: make server
 - View logs: make logs
 - Connect client: make client
 
@@ -27,3 +27,14 @@ Notes
 - Lock file: /var/lock/matt_daemon.lock prevents multiple instances.
 - Logs: /var/log/matt_daemon/matt_daemon.log
 - Port: 4242
+
+For format
+Install C/C++ extension
+Then in your JSON settings of vscode:
+```
+{
+    "C_Cpp.formatting": "clangFormat",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+}
+```

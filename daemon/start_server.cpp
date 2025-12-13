@@ -1,11 +1,12 @@
-#include "daemonize.hpp"
-
-#include <cerrno>
-#include <cstring>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include <cerrno>
 #include <cstdlib>
+#include <cstring>
+
+#include "include/daemonize.hpp"
 
 // Daemonize
 // ---------

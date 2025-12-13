@@ -1,8 +1,9 @@
-#include "signals.hpp"
+#include <unistd.h>
 
 #include <csignal>
 #include <cstdio>
-#include <unistd.h>
+
+#include "include/signals.hpp"
 
 volatile sig_atomic_t g_signal_received = 0;
 
@@ -16,7 +17,7 @@ static void shutdown_handler(int /*signum*/) {
 }
 
 void register_signal_handlers(void) {
-    struct sigaction sa{};
+    struct sigaction sa {};
     sa.sa_handler = shutdown_handler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
@@ -25,7 +26,7 @@ void register_signal_handlers(void) {
     sigaction(SIGHUP, &sa, nullptr);
     sigaction(SIGQUIT, &sa, nullptr);
 
-    struct sigaction sa_ign{};
+    struct sigaction sa_ign {};
     sa_ign.sa_handler = SIG_IGN;
     sigemptyset(&sa_ign.sa_mask);
     sa_ign.sa_flags = SA_RESTART | SA_NOCLDWAIT;
