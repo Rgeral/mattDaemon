@@ -35,7 +35,8 @@ int main(void) {
     // single instance check
     int lockfd = open(md::kLockFile, O_CREAT | O_EXCL | O_WRONLY, 0644);
     if (lockfd < 0) {
-        std::cerr << "Can't open lock file: " << md::kLockFile << std::endl;
+        std::cerr << "Another instance may be running (lock file exists): " << md::kLockFile
+                  << std::endl;
         return 1;
     }
     close(lockfd);
@@ -74,6 +75,6 @@ int main(void) {
     if (g_signal_received) {
         Tintin_reporter::instance().info("Exiting due to received signal.");
     }
-    ::unlink(md::kLockFile);
+    unlink(md::kLockFile);
     return 0;
 }
